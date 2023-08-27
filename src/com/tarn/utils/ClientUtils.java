@@ -50,7 +50,7 @@ public class ClientUtils {
                 }
             } else {
                 try {
-                    launch(location+"/bin/java.exe", "-jar", DownloadType.CLIENT.getLocation() + DownloadType.CLIENT.getSaveName());
+                    launch(location.replace("java.zip", "jre1.8.0_202")+"/bin/java.exe", "-jar", DownloadType.CLIENT.getLocation() + DownloadType.CLIENT.getSaveName());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
