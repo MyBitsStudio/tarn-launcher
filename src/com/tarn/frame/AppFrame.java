@@ -1,9 +1,7 @@
 package com.tarn.frame;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -31,6 +29,8 @@ public class AppFrame extends JFrame {
 
 	public static JLabel tooltip, infoTip;
 	public static IconLabel serverTime, playerCount;
+	public static JMenuBar help;
+	public static JMenuItem cacheHelp, clientHelp, javaHelp;
 
 	public static Label clients, version, cache, cacheVersion, java, javaVersion;
 

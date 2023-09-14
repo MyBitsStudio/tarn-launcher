@@ -22,8 +22,6 @@ public class Launcher {
 
     public static boolean isLocal = false;
 
-    public static InfoPopup infoPopup = new InfoPopup();
-
     static {
         try {
             download = new DownloadManager();
@@ -42,8 +40,8 @@ public class Launcher {
 
         runChecks();
 
-       if(download.download(DownloadType.LAUNCHER)){
-            if(download.download(DownloadType.LAUNCHER_ASSETS)){
+        if(download.download(DownloadType.LAUNCHER_ASSETS)){
+            if(download.download(DownloadType.LAUNCHER)){
                 UIManager.put("Button.select", new Color(1.0f,1.0f, 1.0f, 0.05f));
                 System.setProperty("awt.useSystemAAFontSettings","on");
                 System.setProperty("swing.aatext", "true");
@@ -51,7 +49,7 @@ public class Launcher {
                 app = new AppFrame();
                 app.setVisible(true);
                 app.setLocationRelativeTo(null);
-            }
+           }
         }
 
     }

@@ -22,7 +22,9 @@ public class ButtonListener implements ActionListener {
 	@Override
 	public void actionPerformed(@NotNull ActionEvent e) {
 		switch (e.getActionCommand()) {
+			case "?" :
 
+				break;
 			case "updateClient" :
 				if(Launcher.download.download(DownloadType.CLIENT)){
 					new Thread(new UpdateChecker()).start();

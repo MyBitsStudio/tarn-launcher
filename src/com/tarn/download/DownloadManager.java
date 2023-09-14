@@ -180,6 +180,7 @@ public class DownloadManager {
                         updateLauncher(type);
                     }
                 }
+
                 popup.closePopup();
             } catch (IOException e) {
                 throw new RuntimeException(e);

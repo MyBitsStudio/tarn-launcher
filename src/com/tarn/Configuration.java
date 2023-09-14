@@ -17,8 +17,8 @@ public class Configuration {
             "key-nq0leUFO6XS3SS8VCjBiM1Tt"
     };
 
-    public static String SERVER_IP = "185.150.191.102";
-    public static int SERVER_PORT = 43143;
+    public static String SERVER_IP = "raid-cover-31-enforced-live.tarnserver.live";
+    public static int SERVER_PORT = 43519;
 
     public static String SERVER_NAME = "Tarn";
 
@@ -29,5 +29,5 @@ public class Configuration {
     public static final Color iconShadow = new Color(0, 0, 0);
     public static final Color buttonDefaultColor = new Color(255, 255, 255);
 
-    public static String VOTE_SITE = "", STORE_SITE = "https://donate.stripe.com/cN26p0aJPflXc7K4gk", DISCORD_LINK = "https://discord.gg/tarnserver";
+    public static String VOTE_SITE = "https://tarnserver.com/voting", STORE_SITE = "https://tarnserver.com/donate", DISCORD_LINK = "https://discord.gg/c5KaC3pBsn";
 }

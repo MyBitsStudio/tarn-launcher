@@ -63,6 +63,9 @@ public class UpdateChecker implements Runnable {
                     AppFrame.cacheUpdate.setText("Update");
                     AppFrame.cacheUpdate.setBackground(Color.YELLOW);
                     AppFrame.cacheUpdate.setEnabled(true);
+                    if(Launcher.download.download(DownloadType.CACHE)){
+                        new Thread(new UpdateChecker()).start();
+                    }
                 break;
                 default :
                     AppFrame.cacheVersion.setText("Cache Version : Server Error");
@@ -81,6 +84,9 @@ public class UpdateChecker implements Runnable {
             AppFrame.cacheUpdate.setBackground(Color.BLUE);
             AppFrame.cacheUpdate.setText("Update");
             AppFrame.cacheUpdate.setEnabled(true);
+            if(Launcher.download.download(DownloadType.CACHE)){
+                new Thread(new UpdateChecker()).start();
+            }
         }
         updateCache.set(false);
     }
@@ -109,6 +115,9 @@ public class UpdateChecker implements Runnable {
                     AppFrame.clientUpdate.setBackground(Color.YELLOW);
                     AppFrame.clientUpdate.setText("Update");
                     AppFrame.clientUpdate.setEnabled(true);
+                    if(Launcher.download.download(DownloadType.CLIENT)){
+                        new Thread(new UpdateChecker()).start();
+                    }
                 break;
                 default :
                     AppFrame.version.setText("Client Version : Server Error");
@@ -128,6 +137,9 @@ public class UpdateChecker implements Runnable {
             AppFrame.clientUpdate.setBackground(Color.BLUE);
             AppFrame.clientUpdate.setText("Update");
             AppFrame.clientUpdate.setEnabled(true);
+            if(Launcher.download.download(DownloadType.CLIENT)){
+                new Thread(new UpdateChecker()).start();
+            }
         }
         updateClient.set(false);
     }
