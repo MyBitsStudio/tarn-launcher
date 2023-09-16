@@ -34,6 +34,8 @@ public class DownloadManager {
 
     private final InfoPopup popup;
 
+    private DownloadType currentlyDownloading;
+
     public DownloadManager() throws KeyStoreException {
        loadStore();
        popup = new InfoPopup();
@@ -116,6 +118,9 @@ public class DownloadManager {
         Launcher.logger.log(
                 new Log("Downloading " + type.getName(), LogType.DOWNLOADER), false, true);
         int status = check(type);
+        if(currentlyDownloading != null){
+            return false;
+        }
         switch(status){
             case 1 :
                 Launcher.logger.log(
@@ -166,6 +171,7 @@ public class DownloadManager {
 
     private void triggerDownload(DownloadType type){
         new Thread(() -> {
+            currentlyDownloading = type;
             try (InputStream inputStream = getInputStreamFromUrl(type.getUrl())) {
                 if (inputStream == null) {
                     System.out.println("Failed to download " + type.getName());
@@ -191,7 +197,7 @@ public class DownloadManager {
     private void unZipFile(@NotNull DownloadType type){
         popup.sendPopup("Updating...");
         try {
-            byte[] buffer = new byte[4096];
+            byte[] buffer = new byte[260000];
             ZipInputStream zis = new ZipInputStream(Files.newInputStream(Paths.get(type.getLocation() + File.separator + type.getSaveName())));
             ZipEntry zipEntry = zis.getNextEntry();
             while (zipEntry != null) {
@@ -217,6 +223,7 @@ public class DownloadManager {
             }
             zis.closeEntry();
             zis.close();
+            currentlyDownloading = null;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -237,7 +244,7 @@ public class DownloadManager {
     }
 
     private void downloadFile(@NotNull InputStream inputStream, FileOutputStream outputStream, DownloadType type) throws IOException {
-        byte[] buffer = new byte[4096];
+        byte[] buffer = new byte[260000];
         long numWritten = 0;
         int bytesRead;
         int length = inputStream.available();
@@ -253,6 +260,7 @@ public class DownloadManager {
                 lastUpdateTime = currentTime;
             }
         }
+        currentlyDownloading = null;
         switch(type){
             case CLIENT : AppFrame.clBar.setString("Downloading 100%"); break;
             case CACHE : AppFrame.caBar.setString("Downloading 100%"); break;
