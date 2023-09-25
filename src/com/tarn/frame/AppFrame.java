@@ -29,7 +29,8 @@ public class AppFrame extends JFrame {
 	public static int appWidth, appHeight;
 	public static String serverStatus = "...";
 	public static JProgressBar pbar, clBar, caBar, jaBar;
-	public static Control playButton = new Control("Launch"), clientUpdate, cacheUpdate, javaUpdate;
+	public static Control playButton = new Control("Launch"), clientUpdate, cacheUpdate, javaUpdate,
+	forceClient, fClient, forceCache, deleteCache, deleteClient, checkUpdate;
 
 	public static JLabel tooltip, infoTip;
 	public static IconLabel serverTime, playerCount;
@@ -72,6 +73,7 @@ public class AppFrame extends JFrame {
 		addHeader();
 		addPlayButton();
 		addProgressBar();
+		clientTools();
 
 		drawStatus();
 
@@ -148,6 +150,69 @@ public class AppFrame extends JFrame {
 		add(clientUpdate);
 		add(panel);
 		add(clBar);
+
+	}
+
+	private void clientTools(){
+		IconLabel checker = new IconLabel("Launcher Tools", 16);
+		checker.setBounds(665, 265, 180, 24);
+		JPanel panel = new JPanel();
+		panel.setBounds(535, 315, 400, 250);
+		panel.setForeground(Configuration.primaryColor);
+		panel.setBackground(Configuration.backgroundColor.darker());
+		panel.setLayout(null);
+
+		forceClient = new Control("Force Start");
+		forceClient.setBounds(120, 15, 150, 35);
+		forceClient.setActionCommand("forceClient");
+		forceClient.setBackground(Configuration.primaryColor.darker());
+		forceClient.addActionListener(new ButtonListener());
+		forceClient.setEnabled(true);
+
+		deleteClient = new Control("Delete Client");
+		deleteClient.setBounds(30, 80, 150, 35);
+		deleteClient.setActionCommand("deleteClient");
+		deleteClient.setBackground(Configuration.helpColor.darker());
+		deleteClient.addActionListener(new ButtonListener());
+		deleteClient.setEnabled(true);
+
+		deleteCache = new Control("Delete Cache");
+		deleteCache.setBounds(200, 80, 150, 35);
+		deleteCache.setActionCommand("deleteCache");
+		deleteCache.setBackground(Configuration.helpColor.darker());
+		deleteCache.addActionListener(new ButtonListener());
+		deleteCache.setEnabled(true);
+
+		forceCache = new Control("Cache Update");
+		forceCache.setBounds(30, 145, 150, 35);
+		forceCache.setActionCommand("forceCache");
+		forceCache.setBackground(Configuration.primaryColor.darker());
+		forceCache.addActionListener(new ButtonListener());
+		forceCache.setEnabled(true);
+
+		fClient = new Control("Client Update");
+		fClient.setBounds(200, 145, 150, 35);
+		fClient.setActionCommand("fClient");
+		fClient.setBackground(Configuration.primaryColor.darker());
+		fClient.addActionListener(new ButtonListener());
+		fClient.setEnabled(true);
+
+		checkUpdate = new Control("Force Check");
+		checkUpdate.setBounds(120, 210, 150, 35);
+		checkUpdate.setActionCommand("forceCheck");
+		checkUpdate.setBackground(Configuration.helpColor.darker());
+		checkUpdate.addActionListener(new ButtonListener());
+		checkUpdate.setEnabled(true);
+
+		panel.add(forceClient);
+		panel.add(deleteClient);
+		panel.add(forceCache);
+		panel.add(deleteCache);
+		panel.add(checkUpdate);
+		panel.add(fClient);
+
+		add(checker);
+		add(panel);
 
 	}
 

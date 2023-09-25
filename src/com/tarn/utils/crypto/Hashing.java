@@ -1,9 +1,13 @@
 package com.tarn.utils.crypto;
 
+import com.tarn.Launcher;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,10 +25,26 @@ public class Hashing {
     }
 
     public static String getRemoteChecksum(String location) {
-        try (InputStream stream = new URL(location).openStream()) {
+        try (InputStream stream = getInputStreamFromUrl(location)) {
             return calculateMd5(stream);
         } catch (Exception e) {
-            e.printStackTrace();
+            Launcher.download.sendPopup("Error checking server checksum.");
+            return null;
+        }
+    }
+
+    private static @Nullable InputStream getInputStreamFromUrl(String downloadUrl) throws IOException {
+        URL url = new URL(downloadUrl);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        httpConn.addRequestProperty("User-Agent", "Mozilla/4.76");
+        int responseCode = httpConn.getResponseCode();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            return httpConn.getInputStream();
+        } else {
+            Launcher.download.sendPopup("Server error, can't reach site.");
+            System.out.println(downloadUrl + " returned code " + responseCode);
+            httpConn.disconnect();
             return null;
         }
     }

@@ -42,6 +42,10 @@ public class DownloadManager {
        popup = new InfoPopup();
     }
 
+    public void sendPopup(String info){
+        popup.sendPopup(info, Launcher.app);
+    }
+
     private void loadStore(){
         if(!new File(Configuration.STORE_HOME+"store.jks").exists()) {
             newStore();
@@ -279,7 +283,7 @@ public class DownloadManager {
         }
     }
 
-    private @Nullable InputStream getInputStreamFromUrl(String downloadUrl) throws IOException {
+    public static @Nullable InputStream getInputStreamFromUrl(String downloadUrl) throws IOException {
         URL url = new URL(downloadUrl);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
         httpConn.addRequestProperty("User-Agent", "Mozilla/4.76");

@@ -72,10 +72,11 @@ public class UpdateChecker implements Runnable {
                             future.get(300, TimeUnit.SECONDS);
                         } catch (TimeoutException te) {
                             future.cancel(true);
+                            Launcher.download.sendPopup("Timed out. Please check again");
                             AppFrame.cacheUpdate.setText("Failed - Press Me");
                             AppFrame.cacheUpdate.setEnabled(true);
                         } catch (Exception ex) {
-                            // handle other exceptions
+                            Launcher.download.sendPopup("Cache update checker error");
                         }
                     }
                 break;
@@ -102,10 +103,11 @@ public class UpdateChecker implements Runnable {
                     future.get(300, TimeUnit.SECONDS);
                 } catch (TimeoutException te) {
                     future.cancel(true);
+                    Launcher.download.sendPopup("Timed out. Please check again");
                     AppFrame.cacheUpdate.setText("Failed - Press Me");
                     AppFrame.cacheUpdate.setEnabled(true);
                 } catch (Exception ex) {
-                    // handle other exceptions
+                    Launcher.download.sendPopup("Error checking cache");
                 }
             }
         }
@@ -142,9 +144,11 @@ public class UpdateChecker implements Runnable {
                             future.get(30, TimeUnit.SECONDS);
                         } catch (TimeoutException te) {
                             future.cancel(true);
+                            Launcher.download.sendPopup("Timed out. Please check again");
                             AppFrame.clientUpdate.setText("Failed - Press me");
                             AppFrame.clientUpdate.setEnabled(true);
                         } catch (Exception ex) {
+                            Launcher.download.sendPopup("Error checking client");
                             // handle other exceptions
                         }
                     }
@@ -173,9 +177,11 @@ public class UpdateChecker implements Runnable {
                     future.get(30, TimeUnit.SECONDS);
                 } catch (TimeoutException te) {
                     future.cancel(true);
+                    Launcher.download.sendPopup("Timed out. Please check again");
                     AppFrame.clientUpdate.setText("Failed - Press Me");
                     AppFrame.clientUpdate.setEnabled(true);
                 } catch (Exception ex) {
+                    Launcher.download.sendPopup("Error checking client");
                     // handle other exceptions
                 }
             }
