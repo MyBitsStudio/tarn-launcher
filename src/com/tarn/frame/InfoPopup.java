@@ -6,7 +6,7 @@ import java.util.Objects;
 public class InfoPopup {
 
     private JDialog dialog;
-    public void sendPopup(String info){
+    public void sendPopup(String info, AppFrame frame){
         if(!Objects.equals(dialog, null)){
             dialog.dispose();
         }
@@ -14,9 +14,9 @@ public class InfoPopup {
         String title = "Tarn Launcher";
         dialog.setTitle(title);
         dialog.setResizable(false);
-        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         dialog.setSize(300, 100);
-        dialog.setLocationRelativeTo(null);
+        dialog.setLocationRelativeTo(frame);
         dialog.setLayout(null);
 
         JProgressBar progressBar = new JProgressBar();

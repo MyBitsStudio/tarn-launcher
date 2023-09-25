@@ -17,8 +17,8 @@ public class Configuration {
             "key-nq0leUFO6XS3SS8VCjBiM1Tt"
     };
 
-    public static String SERVER_IP = "raid-cover-31-enforced-live.tarnserver.live";
-    public static int SERVER_PORT = 43519;
+    public static String SERVER_IP = "tarn-server-raid-01-enforced-live.tarnserver.live";
+    public static int SERVER_PORT = 42166;
 
     public static String SERVER_NAME = "Tarn";
 

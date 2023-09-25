@@ -2,6 +2,9 @@ package com.tarn.frame;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +19,7 @@ import com.fox.listeners.ButtonListener;
 import com.fox.listeners.HoverListener;
 import com.fox.threads.ServerTime;
 import com.tarn.Configuration;
+import com.tarn.io.ThreadManager;
 import com.tarn.io.UpdateChecker;
 import com.tarn.utils.Utils;
 
@@ -73,7 +77,7 @@ public class AppFrame extends JFrame {
 
 		startCheck();
 		
-		setIconImage(Utils.getImage("favicon_large.png").getImage());
+		setIconImage(Utils.getImage("favicon-large.png").getImage());
 		addMouseListener();
 		pack();
 	}
@@ -83,7 +87,16 @@ public class AppFrame extends JFrame {
 		cacheChecker();
 		javaChecker();
 
-		new Thread(new UpdateChecker()).start();
+		Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
+		try {
+			future.get(30, TimeUnit.SECONDS);
+		} catch (TimeoutException te) {
+			future.cancel(true);
+			AppFrame.clientUpdate.setText("Failed");
+			AppFrame.clientUpdate.setEnabled(false);
+		} catch (Exception ex) {
+			// handle other exceptions
+		}
 		new Thread(new ServerTime()).start();
 	}
 

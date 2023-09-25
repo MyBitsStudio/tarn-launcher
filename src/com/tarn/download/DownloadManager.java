@@ -4,6 +4,7 @@ import com.tarn.Configuration;
 import com.tarn.Launcher;
 import com.tarn.frame.AppFrame;
 import com.tarn.frame.InfoPopup;
+import com.tarn.io.ThreadManager;
 import com.tarn.logger.Log;
 import com.tarn.logger.LogType;
 import com.tarn.utils.ClientUtils;
@@ -83,7 +84,7 @@ public class DownloadManager {
      * @return int
      */
     public int check(@NotNull DownloadType type){
-        popup.sendPopup("Checking " + type.getName() + " version");
+        popup.sendPopup("Checking " + type.getName() + " version", Launcher.app);
         if(type.equals(DownloadType.LAUNCHER)){
             if(Launcher.isLocal){
                 return 0;
@@ -94,7 +95,7 @@ public class DownloadManager {
         if(remoteHash == null){
             Launcher.logger.log(
                     new Log("Remote server error", LogType.DOWNLOADER), false, true);
-            popup.sendPopup("Remote Server Error");
+            popup.sendPopup("Remote Server Error", Launcher.app);
             return 2;
         } else if (hash == null || !hash.equals(remoteHash)) {
             Launcher.logger.log(
@@ -125,13 +126,13 @@ public class DownloadManager {
             case 1 :
                 Launcher.logger.log(
                         new Log("Triggering " + type.getName(), LogType.DOWNLOADER), false, true);
-                popup.sendPopup("Downloading " + type.getName()+"...");
+                popup.sendPopup("Downloading " + type.getName()+"...", Launcher.app);
                 triggerDownload(type);
                 save();
                 return true;
             case 2 : Launcher.logger.log(
                     new Log("Server Error " , LogType.DOWNLOADER), false, true);
-                popup.sendPopup("Server Error");
+                popup.sendPopup("Server Error", Launcher.app);
                 break;
             default :
                 if(!Launcher.isLocal){
@@ -170,7 +171,7 @@ public class DownloadManager {
     }
 
     private void triggerDownload(DownloadType type){
-        new Thread(() -> {
+        ThreadManager.execute(() -> {
             currentlyDownloading = type;
             try (InputStream inputStream = getInputStreamFromUrl(type.getUrl())) {
                 if (inputStream == null) {
@@ -191,13 +192,13 @@ public class DownloadManager {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }).start();
+        });
     }
 
     private void unZipFile(@NotNull DownloadType type){
-        popup.sendPopup("Updating...");
+        popup.sendPopup("Updating...", Launcher.app);
         try {
-            byte[] buffer = new byte[260000];
+            byte[] buffer = new byte[296000];
             ZipInputStream zis = new ZipInputStream(Files.newInputStream(Paths.get(type.getLocation() + File.separator + type.getSaveName())));
             ZipEntry zipEntry = zis.getNextEntry();
             while (zipEntry != null) {
@@ -244,21 +245,11 @@ public class DownloadManager {
     }
 
     private void downloadFile(@NotNull InputStream inputStream, FileOutputStream outputStream, DownloadType type) throws IOException {
-        byte[] buffer = new byte[260000];
-        long numWritten = 0;
+        byte[] buffer = new byte[296000];
         int bytesRead;
-        int length = inputStream.available();
-        long lastUpdateTime = System.currentTimeMillis();
 
         while ((bytesRead = inputStream.read(buffer)) != -1) {
             outputStream.write(buffer, 0, bytesRead);
-            numWritten += bytesRead;
-
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - lastUpdateTime > 1000) {
-                updateDownloadStatus(numWritten, length, type, currentTime);
-                lastUpdateTime = currentTime;
-            }
         }
         currentlyDownloading = null;
         switch(type){

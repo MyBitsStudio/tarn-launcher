@@ -6,6 +6,9 @@ import com.tarn.frame.AppFrame;
 
 import java.awt.*;
 import java.io.File;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UpdateChecker implements Runnable {
@@ -64,7 +67,16 @@ public class UpdateChecker implements Runnable {
                     AppFrame.cacheUpdate.setBackground(Color.YELLOW);
                     AppFrame.cacheUpdate.setEnabled(true);
                     if(Launcher.download.download(DownloadType.CACHE)){
-                        new Thread(new UpdateChecker()).start();
+                        Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
+                        try {
+                            future.get(150, TimeUnit.SECONDS);
+                        } catch (TimeoutException te) {
+                            future.cancel(true);
+                            AppFrame.cacheUpdate.setText("Failed - Press Me");
+                            AppFrame.cacheUpdate.setEnabled(true);
+                        } catch (Exception ex) {
+                            // handle other exceptions
+                        }
                     }
                 break;
                 default :
@@ -85,7 +97,16 @@ public class UpdateChecker implements Runnable {
             AppFrame.cacheUpdate.setText("Update");
             AppFrame.cacheUpdate.setEnabled(true);
             if(Launcher.download.download(DownloadType.CACHE)){
-                new Thread(new UpdateChecker()).start();
+                Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
+                try {
+                    future.get(150, TimeUnit.SECONDS);
+                } catch (TimeoutException te) {
+                    future.cancel(true);
+                    AppFrame.cacheUpdate.setText("Failed - Press Me");
+                    AppFrame.cacheUpdate.setEnabled(true);
+                } catch (Exception ex) {
+                    // handle other exceptions
+                }
             }
         }
         updateCache.set(false);
@@ -116,7 +137,16 @@ public class UpdateChecker implements Runnable {
                     AppFrame.clientUpdate.setText("Update");
                     AppFrame.clientUpdate.setEnabled(true);
                     if(Launcher.download.download(DownloadType.CLIENT)){
-                        new Thread(new UpdateChecker()).start();
+                        Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
+                        try {
+                            future.get(30, TimeUnit.SECONDS);
+                        } catch (TimeoutException te) {
+                            future.cancel(true);
+                            AppFrame.clientUpdate.setText("Failed - Press me");
+                            AppFrame.clientUpdate.setEnabled(true);
+                        } catch (Exception ex) {
+                            // handle other exceptions
+                        }
                     }
                 break;
                 default :
@@ -138,7 +168,16 @@ public class UpdateChecker implements Runnable {
             AppFrame.clientUpdate.setText("Update");
             AppFrame.clientUpdate.setEnabled(true);
             if(Launcher.download.download(DownloadType.CLIENT)){
-                new Thread(new UpdateChecker()).start();
+                Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
+                try {
+                    future.get(30, TimeUnit.SECONDS);
+                } catch (TimeoutException te) {
+                    future.cancel(true);
+                    AppFrame.clientUpdate.setText("Failed - Press Me");
+                    AppFrame.clientUpdate.setEnabled(true);
+                } catch (Exception ex) {
+                    // handle other exceptions
+                }
             }
         }
         updateClient.set(false);
