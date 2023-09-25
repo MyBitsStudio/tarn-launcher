@@ -69,7 +69,7 @@ public class UpdateChecker implements Runnable {
                     if(Launcher.download.download(DownloadType.CACHE)){
                         Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
                         try {
-                            future.get(150, TimeUnit.SECONDS);
+                            future.get(300, TimeUnit.SECONDS);
                         } catch (TimeoutException te) {
                             future.cancel(true);
                             AppFrame.cacheUpdate.setText("Failed - Press Me");
@@ -99,7 +99,7 @@ public class UpdateChecker implements Runnable {
             if(Launcher.download.download(DownloadType.CACHE)){
                 Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
                 try {
-                    future.get(150, TimeUnit.SECONDS);
+                    future.get(300, TimeUnit.SECONDS);
                 } catch (TimeoutException te) {
                     future.cancel(true);
                     AppFrame.cacheUpdate.setText("Failed - Press Me");

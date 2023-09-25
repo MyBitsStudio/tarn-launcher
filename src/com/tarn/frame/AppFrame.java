@@ -89,7 +89,7 @@ public class AppFrame extends JFrame {
 
 		Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
 		try {
-			future.get(30, TimeUnit.SECONDS);
+			future.get(300, TimeUnit.SECONDS);
 		} catch (TimeoutException te) {
 			future.cancel(true);
 			AppFrame.clientUpdate.setText("Failed");

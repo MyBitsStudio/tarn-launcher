@@ -32,7 +32,7 @@ public class ButtonListener implements ActionListener {
 				if(Launcher.download.download(DownloadType.CLIENT)){
 					Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
 					try {
-						future.get(30, TimeUnit.SECONDS);
+						future.get(300, TimeUnit.SECONDS);
 					} catch (TimeoutException te) {
 						future.cancel(true);
 						AppFrame.clientUpdate.setText("Failed - Press Me");
@@ -51,7 +51,7 @@ public class ButtonListener implements ActionListener {
 				if(Launcher.download.download(DownloadType.CACHE)){
 					Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
 					try {
-						future.get(150, TimeUnit.SECONDS);
+						future.get(300, TimeUnit.SECONDS);
 					} catch (TimeoutException te) {
 						future.cancel(true);
 						AppFrame.cacheUpdate.setText("Failed- Press Me");
@@ -71,7 +71,7 @@ public class ButtonListener implements ActionListener {
 						if(Launcher.download.download(DownloadType.JAVA_WINDOWS)){
 							Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
 							try {
-								future.get(30, TimeUnit.SECONDS);
+								future.get(300, TimeUnit.SECONDS);
 							} catch (TimeoutException te) {
 								future.cancel(true);
 								AppFrame.javaUpdate.setText("Failed- Press Me");
@@ -88,7 +88,7 @@ public class ButtonListener implements ActionListener {
 						if(Launcher.download.download(DownloadType.JAVA_MAC)){
 							Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
 							try {
-								future.get(30, TimeUnit.SECONDS);
+								future.get(300, TimeUnit.SECONDS);
 							} catch (TimeoutException te) {
 								future.cancel(true);
 								AppFrame.javaUpdate.setText("Failed- Press Me");
@@ -105,7 +105,7 @@ public class ButtonListener implements ActionListener {
 						if(Launcher.download.download(DownloadType.JAVA_LINUX)){
 							Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
 							try {
-								future.get(30, TimeUnit.SECONDS);
+								future.get(300, TimeUnit.SECONDS);
 							} catch (TimeoutException te) {
 								future.cancel(true);
 								AppFrame.javaUpdate.setText("Failed- Press Me");
