@@ -27,26 +27,24 @@ public class AppFrame extends JFrame {
 	private static Point initialClick;
 	
 	public static int appWidth, appHeight;
-	public static String serverStatus = "...";
 	public static JProgressBar pbar, clBar, caBar, jaBar;
 	public static Control playButton = new Control("Launch"), clientUpdate, cacheUpdate, javaUpdate,
 	forceClient, fClient, forceCache, deleteCache, deleteClient, checkUpdate;
 
 	public static JLabel tooltip, infoTip;
 	public static IconLabel serverTime, playerCount;
-	public static JMenuBar help;
-	public static JMenuItem cacheHelp, clientHelp, javaHelp;
 
 	public static Label clients, version, cache, cacheVersion, java, javaVersion;
 
 	public static ColorIcon icon;
 
 	public static boolean isOnline = false;
-	public static String[] info = new String[16];
 
 	public static boolean cacheUpdated = false,  clientUpdated = false, javaUpdated = false;
 
 	public static TrayIcon trayIcon;
+
+	public static SettingPopup settings;
 	
 	public AppFrame() {
 		setPreferredSize(Configuration.frameSize);
@@ -61,7 +59,7 @@ public class AppFrame extends JFrame {
 		getContentPane().setBackground(Configuration.backgroundColor);
 
 		try {
-			trayIcon = new TrayIcon(Utils.getRotatedImage("favicon.png", 0), "Tarn");
+			trayIcon = new TrayIcon(Utils.getRotatedImage("favicon.png", 0), "Tarn Launcher");
 			SystemTray tray = SystemTray.getSystemTray();
 			tray.add(trayIcon);
 		} catch (Exception e) {
@@ -85,21 +83,34 @@ public class AppFrame extends JFrame {
 	}
 
 	private void startCheck(){
-		clientChecker();
-		cacheChecker();
-		javaChecker();
+			ThreadManager.execute(() -> {
+				clientChecker();
+				cacheChecker();
+				javaChecker();
 
-		Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
-		try {
-			future.get(300, TimeUnit.SECONDS);
-		} catch (TimeoutException te) {
-			future.cancel(true);
-			AppFrame.clientUpdate.setText("Failed");
-			AppFrame.clientUpdate.setEnabled(false);
-		} catch (Exception ex) {
-			// handle other exceptions
-		}
-		new Thread(new ServerTime()).start();
+				if(Configuration.autoCheck){
+					Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
+					try {
+						future.get(300, TimeUnit.SECONDS);
+					} catch (TimeoutException te) {
+						future.cancel(true);
+						AppFrame.clientUpdate.setText("Failed");
+						AppFrame.clientUpdate.setEnabled(false);
+					} catch (Exception ex) {
+						// handle other exceptions
+					}
+				} else {
+					AppFrame.cacheVersion.setText("Cache Version : Not Checked");
+					AppFrame.caBar.setValue(100);
+					AppFrame.caBar.setString("Update Manually");
+					AppFrame.cacheUpdate.setText("Not updated");
+					AppFrame.cacheUpdate.setBackground(Color.red);
+					AppFrame.cacheUpdate.setEnabled(true);
+					AppFrame.cacheUpdated = false;
+				}
+
+				new Thread(new ServerTime()).start();
+			});
 	}
 
 	private void clientChecker(){

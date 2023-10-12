@@ -22,6 +22,7 @@ import com.tarn.download.DownloadManager;
 import com.tarn.download.DownloadType;
 import com.tarn.frame.AppFrame;
 import com.fox.net.Download;
+import com.tarn.frame.SettingPopup;
 import com.tarn.io.ThreadManager;
 import com.tarn.io.UpdateChecker;
 import com.tarn.utils.ClientUtils;
@@ -32,13 +33,25 @@ import static com.tarn.download.DownloadManager.newFile;
 
 public class ButtonListener implements ActionListener {
 
-	public static Download download;
 
 	@Override
 	public void actionPerformed(@NotNull ActionEvent e) {
+		if(e.getActionCommand().contains("Auto-Update")){
+			Configuration.autoUpdate = !Configuration.autoUpdate;
+			Launcher.writeSettings();
+			AppFrame.settings.closePopup();
+			AppFrame.settings.sendPopup(null);
+		}
+		if(e.getActionCommand().contains("Auto-Check")){
+			Configuration.autoCheck = !Configuration.autoCheck;
+			Launcher.writeSettings();
+			AppFrame.settings.closePopup();
+			AppFrame.settings.sendPopup(null);
+		}
 		switch (e.getActionCommand()) {
 			case "?":
-
+				AppFrame.settings = new SettingPopup();
+				AppFrame.settings.sendPopup(Launcher.app);
 				break;
 			case "forceClient":
 				ClientUtils.startClient();

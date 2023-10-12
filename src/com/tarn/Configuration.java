@@ -10,6 +10,8 @@ public class Configuration {
     public static String HOME = System.getProperty("user.home") + "/.tarn/";
     public static String LOGS = System.getProperty("user.home") + "/.tarn/logs/";
 
+    public static boolean autoUpdate = false, autoCheck = true;
+
 
     public static String[] keys = new String[]{
             "checkfile-Rq5TfSE6XS92RA9EWdnZ5",

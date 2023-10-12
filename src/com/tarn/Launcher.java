@@ -11,7 +11,12 @@ import com.tarn.logger.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyStoreException;
+import java.util.stream.Stream;
 
 public class Launcher {
 
@@ -42,13 +47,17 @@ public class Launcher {
 
         if(download.download(DownloadType.LAUNCHER_ASSETS)){
             if(download.download(DownloadType.LAUNCHER)){
-                UIManager.put("Button.select", new Color(1.0f,1.0f, 1.0f, 0.05f));
-                System.setProperty("awt.useSystemAAFontSettings","on");
-                System.setProperty("swing.aatext", "true");
+                new Thread(() -> {
+                    loadSettings();
 
-                app = new AppFrame();
-                app.setVisible(true);
-                app.setLocationRelativeTo(null);
+                    UIManager.put("Button.select", new Color(1.0f,1.0f, 1.0f, 0.05f));
+                    System.setProperty("awt.useSystemAAFontSettings","on");
+                    System.setProperty("swing.aatext", "true");
+
+                    app = new AppFrame();
+                    app.setVisible(true);
+                    app.setLocationRelativeTo(null);
+                }).start();
            }
         }
 
@@ -69,5 +78,40 @@ public class Launcher {
 
         if(!new File(Configuration.CACHE_HOME+"data/").exists())
             new File(Configuration.CACHE_HOME+"data/").mkdirs();
+
+        if(!new File(Configuration.HOME+"settings.txt").exists()){
+            writeSettings();
+        }
+    }
+
+    public static void writeSettings(){
+        try(FileWriter myWriter = new FileWriter(Configuration.HOME+"settings.txt")) {
+            myWriter.write("auto-update :: "+Configuration.autoUpdate);
+            myWriter.write(System.getProperty( "line.separator" ));
+            myWriter.write("auto-check :: "+Configuration.autoCheck);
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    private static void loadSettings(){
+        if(!new File(Configuration.HOME+"settings.txt").exists()){
+            writeSettings();
+        } else {
+            try (Stream<String> stream = Files.lines(Paths.get(String.valueOf(new File(Configuration.HOME+"settings.txt"))))) {
+                stream.forEach(string -> {
+                    String[] line = string.split(" :: ");
+                    if(line[0].equals("auto-update")){
+                        Configuration.autoUpdate = Boolean.parseBoolean(line[1]);
+                    }
+                    if(line[0].equals("auto-check")){
+                        Configuration.autoCheck = Boolean.parseBoolean(line[1]);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

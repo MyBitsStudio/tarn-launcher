@@ -202,7 +202,7 @@ public class DownloadManager {
     private void unZipFile(@NotNull DownloadType type){
         popup.sendPopup("Updating...", Launcher.app);
         try {
-            byte[] buffer = new byte[296000];
+            byte[] buffer = new byte[1256000];
             ZipInputStream zis = new ZipInputStream(Files.newInputStream(Paths.get(type.getLocation() + File.separator + type.getSaveName())));
             ZipEntry zipEntry = zis.getNextEntry();
             while (zipEntry != null) {
@@ -249,7 +249,7 @@ public class DownloadManager {
     }
 
     private void downloadFile(@NotNull InputStream inputStream, FileOutputStream outputStream, DownloadType type) throws IOException {
-        byte[] buffer = new byte[296000];
+        byte[] buffer = new byte[1256000];
         int bytesRead;
 
         while ((bytesRead = inputStream.read(buffer)) != -1) {

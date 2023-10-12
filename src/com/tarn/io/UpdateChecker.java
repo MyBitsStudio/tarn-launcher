@@ -1,5 +1,6 @@
 package com.tarn.io;
 
+import com.tarn.Configuration;
 import com.tarn.Launcher;
 import com.tarn.download.DownloadType;
 import com.tarn.frame.AppFrame;
@@ -66,18 +67,24 @@ public class UpdateChecker implements Runnable {
                     AppFrame.cacheUpdate.setText("Update");
                     AppFrame.cacheUpdate.setBackground(Color.YELLOW);
                     AppFrame.cacheUpdate.setEnabled(true);
-                    if(Launcher.download.download(DownloadType.CACHE)){
-                        Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
-                        try {
-                            future.get(300, TimeUnit.SECONDS);
-                        } catch (TimeoutException te) {
-                            future.cancel(true);
-                            Launcher.download.sendPopup("Timed out. Please check again");
-                            AppFrame.cacheUpdate.setText("Failed - Press Me");
-                            AppFrame.cacheUpdate.setEnabled(true);
-                        } catch (Exception ex) {
-                            Launcher.download.sendPopup("Cache update checker error");
+                    if(Configuration.autoUpdate) {
+                        if (Launcher.download.download(DownloadType.CACHE)) {
+                            Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
+                            try {
+                                future.get(300, TimeUnit.SECONDS);
+                            } catch (TimeoutException te) {
+                                future.cancel(true);
+                                Launcher.download.sendPopup("Timed out. Please check again");
+                                AppFrame.cacheUpdate.setText("Failed - Press Me");
+                                AppFrame.cacheUpdate.setEnabled(true);
+                            } catch (Exception ex) {
+                                Launcher.download.sendPopup("Cache update checker error");
+                            }
                         }
+                    } else {
+                        Launcher.download.sendPopup("Update needed. Manually update.");
+                        AppFrame.cacheUpdate.setText("Update needed");
+                        AppFrame.cacheUpdate.setEnabled(true);
                     }
                 break;
                 default :
@@ -97,19 +104,20 @@ public class UpdateChecker implements Runnable {
             AppFrame.cacheUpdate.setBackground(Color.BLUE);
             AppFrame.cacheUpdate.setText("Update");
             AppFrame.cacheUpdate.setEnabled(true);
-            if(Launcher.download.download(DownloadType.CACHE)){
-                Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
-                try {
-                    future.get(300, TimeUnit.SECONDS);
-                } catch (TimeoutException te) {
-                    future.cancel(true);
-                    Launcher.download.sendPopup("Timed out. Please check again");
-                    AppFrame.cacheUpdate.setText("Failed - Press Me");
-                    AppFrame.cacheUpdate.setEnabled(true);
-                } catch (Exception ex) {
-                    Launcher.download.sendPopup("Error checking cache");
+            if(Configuration.autoUpdate)
+                if(Launcher.download.download(DownloadType.CACHE)){
+                    Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
+                    try {
+                        future.get(300, TimeUnit.SECONDS);
+                    } catch (TimeoutException te) {
+                        future.cancel(true);
+                        Launcher.download.sendPopup("Timed out. Please check again");
+                        AppFrame.cacheUpdate.setText("Failed - Press Me");
+                        AppFrame.cacheUpdate.setEnabled(true);
+                    } catch (Exception ex) {
+                        Launcher.download.sendPopup("Error checking cache");
+                    }
                 }
-            }
         }
         updateCache.set(false);
     }
@@ -138,19 +146,25 @@ public class UpdateChecker implements Runnable {
                     AppFrame.clientUpdate.setBackground(Color.YELLOW);
                     AppFrame.clientUpdate.setText("Update");
                     AppFrame.clientUpdate.setEnabled(true);
-                    if(Launcher.download.download(DownloadType.CLIENT)){
-                        Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
-                        try {
-                            future.get(30, TimeUnit.SECONDS);
-                        } catch (TimeoutException te) {
-                            future.cancel(true);
-                            Launcher.download.sendPopup("Timed out. Please check again");
-                            AppFrame.clientUpdate.setText("Failed - Press me");
-                            AppFrame.clientUpdate.setEnabled(true);
-                        } catch (Exception ex) {
-                            Launcher.download.sendPopup("Error checking client");
-                            // handle other exceptions
+                    if(Configuration.autoUpdate) {
+                        if (Launcher.download.download(DownloadType.CLIENT)) {
+                            Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
+                            try {
+                                future.get(30, TimeUnit.SECONDS);
+                            } catch (TimeoutException te) {
+                                future.cancel(true);
+                                Launcher.download.sendPopup("Timed out. Please check again");
+                                AppFrame.clientUpdate.setText("Failed - Press me");
+                                AppFrame.clientUpdate.setEnabled(true);
+                            } catch (Exception ex) {
+                                Launcher.download.sendPopup("Error checking client");
+                                // handle other exceptions
+                            }
                         }
+                    } else {
+                        Launcher.download.sendPopup("Update needed. Manually update client");
+                        AppFrame.clientUpdate.setText("Update needed");
+                        AppFrame.clientUpdate.setEnabled(true);
                     }
                 break;
                 default :
@@ -171,20 +185,21 @@ public class UpdateChecker implements Runnable {
             AppFrame.clientUpdate.setBackground(Color.BLUE);
             AppFrame.clientUpdate.setText("Update");
             AppFrame.clientUpdate.setEnabled(true);
-            if(Launcher.download.download(DownloadType.CLIENT)){
-                Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
-                try {
-                    future.get(30, TimeUnit.SECONDS);
-                } catch (TimeoutException te) {
-                    future.cancel(true);
-                    Launcher.download.sendPopup("Timed out. Please check again");
-                    AppFrame.clientUpdate.setText("Failed - Press Me");
-                    AppFrame.clientUpdate.setEnabled(true);
-                } catch (Exception ex) {
-                    Launcher.download.sendPopup("Error checking client");
-                    // handle other exceptions
+            if(Configuration.autoUpdate)
+                if(Launcher.download.download(DownloadType.CLIENT)){
+                    Future<?> future = ThreadManager.executor.submit(new UpdateChecker());
+                    try {
+                        future.get(30, TimeUnit.SECONDS);
+                    } catch (TimeoutException te) {
+                        future.cancel(true);
+                        Launcher.download.sendPopup("Timed out. Please check again");
+                        AppFrame.clientUpdate.setText("Failed - Press Me");
+                        AppFrame.clientUpdate.setEnabled(true);
+                    } catch (Exception ex) {
+                        Launcher.download.sendPopup("Error checking client");
+                        // handle other exceptions
+                    }
                 }
-            }
         }
         updateClient.set(false);
     }
